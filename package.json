@@ -1,17 +1,31 @@
 {
-  "devDependencies": {
-    "@types/node": "^25.5.0",
-    "@types/prompt-sync": "^4.2.3"
+  "name": "jokes",
+  "version": "1.0.0",
+  "description": "Reading and writing files exercise",
+  "homepage": "https://github.com/axlsld/Jokes#readme",
+  "bugs": {
+    "url": "https://github.com/axlsld/Jokes/issues"
   },
-  "scripts": {
-    "build":"tsc ",
-    "start":"node joke.js"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axlsld/Jokes.git"
   },
+  "license": "ISC",
+  "author": "John Alexis Saldua",
   "type": "commonjs",
+  "main": "joke.js",
+  "scripts": {
+    "build": "tsc ",
+    "start": "node joke.js"
+  },
   "dependencies": {
     "csv-parse": "^6.2.1",
     "csv-parser": "^3.2.0",
     "prompt-sync": "^4.2.0",
     "typescript": "^6.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/prompt-sync": "^4.2.3"
   }
 }
