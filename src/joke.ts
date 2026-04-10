@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import * as dotenv from 'dotenv';
+import './env';
 
 dotenv.config();
 function getPrompt() {
@@ -44,6 +45,21 @@ export function fileSelection(): string{
   return path;
 }
 
+export function validateAndExecuteJokeSelection(input: string, jokes: [number, string][]): boolean {
+  const id: number = parseInt(input);
+
+  if(input == '0'){
+    return false;
+  }
+
+  if ((id > 0 && id < jokes.length) && Number.isInteger(Number(input))) {
+    console.log(jokes[id][1]);
+    return true;
+  } else {
+    console.log('Invalid input or joke not found');
+  }
+}
+
 function jokeSelection(jokes: [number, string][]){
   const prompt = getPrompt();
   while (true){
@@ -53,17 +69,15 @@ function jokeSelection(jokes: [number, string][]){
     console.log("---------------------------------------");
     const input: string = prompt('Enter a number: ');
     console.log("---------------------------------------"); 
-    const id: number = parseInt(input);
+    const status = validateAndExecuteJokeSelection(input, jokes);
 
-    if(input == '0'){
-      return false;
+    if (status === false){
+      console.log('Exiting the program...');
+      break;
     }
 
-    if ((id > 0 && id < jokes.length) && Number.isInteger(Number(input))) {
-      console.log(jokes[id][1]);
+    if (status === true){
       return true;
-    } else {
-      console.log('Invalid input or joke not found');
     }
   }
 }
