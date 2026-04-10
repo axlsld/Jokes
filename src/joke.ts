@@ -1,21 +1,19 @@
 import * as fs from 'fs';
-import promptSync = require('prompt-sync');
 import { parse } from 'csv-parse/sync';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const prompt = promptSync();
+function getPrompt() {
+  if (process.env.VITEST) {
+    throw new Error("Prompt used during test import (forbidden)");
+  }
 
-export function fileSelection(): string{
-  console.log("---------------------------------------");
-  console.log("This is a program that gives you a joke");
-  console.log("based on the number you will input.");
-  console.log("\nChoose the type of file you want:");
-  console.log("- Type 1 for csv\n- Type 2 for json\n- Type anything else to exit.");
-  console.log("---------------------------------------");
-  const choice: string = prompt('Enter a number: ');
+  const promptSync = require('prompt-sync')();
+  return promptSync;
+}
+
+export function isCSVorJSON(choice: string): string{
   let path: string;
-
   if (choice == '1'){
     if (!process.env.CSV_PATH){
       throw new Error("No CSV_PATH in .env");
@@ -29,12 +27,25 @@ export function fileSelection(): string{
   } else {
     console.log('Exiting the program...')
     path='end';
-  } 
+  } return path;
+}
+
+export function fileSelection(): string{
+  const prompt = getPrompt();
+  console.log("---------------------------------------");
+  console.log("This is a program that gives you a joke");
+  console.log("based on the number you will input.");
+  console.log("\nChoose the type of file you want:");
+  console.log("- Type 1 for csv\n- Type 2 for json\n- Type anything else to exit.");
+  console.log("---------------------------------------");
+  const choice: string = prompt('Enter a number: ');
+  const path = isCSVorJSON(choice);
   
   return path;
 }
 
 function jokeSelection(jokes: [number, string][]){
+  const prompt = getPrompt();
   while (true){
     console.log("---------------------------------------");
     console.log(`TYPE A NUMBER FROM 1 TO ${jokes.length-1} TO GET A JOKE`);
@@ -92,6 +103,6 @@ export function jokeProgram(){
   }
 }
 
-if (require.main === module) {
+if (require.main === module && process.env.VITEST !== 'true') {
   jokeProgram();
 }
