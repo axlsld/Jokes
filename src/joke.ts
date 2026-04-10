@@ -6,7 +6,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 const prompt = promptSync();
 
-function fileSelection(): string{
+export function fileSelection(): string{
   console.log("---------------------------------------");
   console.log("This is a program that gives you a joke");
   console.log("based on the number you will input.");
@@ -57,35 +57,41 @@ function jokeSelection(jokes: [number, string][]){
   }
 }
 
-while(true){
-  const pathChosen = fileSelection();
+export function jokeProgram(){
+  while(true){
+    const pathChosen = fileSelection();
 
-  if (pathChosen === 'end'){
-    break;
+    if (pathChosen === 'end'){
+      break;
+    }
+
+    if (!fs.existsSync(pathChosen)){
+      console.log("File not found.");
+      continue;
+    }
+
+    let data: string;
+    try{
+      data = fs.readFileSync(pathChosen, 'utf8');
+    } catch (err) {
+      console.error("Error reading file: ", err);
+      continue;
+    }
+
+    let array;
+
+    if (pathChosen == process.env.CSV_PATH){
+      array = parse(data, {columns: false, skip_empty_lines: true, relax_quotes: true, relax_column_count: true});
+    } else {
+      const arrayJSON = JSON.parse(data);
+      array = arrayJSON.map((obj, index) => [index+1, obj.joke]);
+    }
+
+    const continueProgram = jokeSelection(array);
+    if(!continueProgram) break;
   }
+}
 
-  if (!fs.existsSync(pathChosen)){
-    console.log("File not found.");
-    continue;
-  }
-
-  let data: string;
-  try{
-    data = fs.readFileSync(pathChosen, 'utf8');
-  } catch (err) {
-    console.error("Error reading file: ", err);
-    continue;
-  }
-
-  let array;
-
-  if (pathChosen == process.env.CSV_PATH){
-    array = parse(data, {columns: false, skip_empty_lines: true, relax_quotes: true, relax_column_count: true});
-  } else {
-    const arrayJSON = JSON.parse(data);
-    array = arrayJSON.map((obj, index) => [index+1, obj.joke]);
-  }
-
-  const continueProgram = jokeSelection(array);
-  if(!continueProgram) break;
+if (require.main === module) {
+  jokeProgram();
 }
