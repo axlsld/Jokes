@@ -40,9 +40,7 @@ export function fileSelection(): string{
   console.log("- Type 1 for csv\n- Type 2 for json\n- Type anything else to exit.");
   console.log("---------------------------------------");
   const choice: string = prompt('Enter a number: ');
-  const path = isCSVorJSON(choice);
-  
-  return path;
+  return isCSVorJSON(choice);
 }
 
 export function validateAndExecuteJokeSelection(input: string, jokes: [number, string][]): boolean {

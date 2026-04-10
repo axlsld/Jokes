@@ -1,26 +1,27 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { isCSVorJSON, validateAndExecuteJokeSelection } from '../src/joke.ts';
+import { isCSVorJSON as isCSVorJSONRead, validateAndExecuteJokeSelection } from '../src/joke.ts';
+import { isCSVorJSON as isCSVorJSONWrite } from '../src/writeJoke.ts';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-describe('joke.isCSVorJSON', () => {
+describe('joke.isCSVorJSONRead', () => {
   
   const csvPath: string = process.env.CSV_PATH;
   const jsonPath: string = process.env.JSON_PATH;
 
   it('Returns CSV path when user selects 1', () => {
-    expect(isCSVorJSON('1')).toBe(csvPath);
+    expect(isCSVorJSONRead('1')).toBe(csvPath);
   });
 
   it('Returns JSON path when user selects 2', () => {
-    expect(isCSVorJSON('2')).toBe(jsonPath);
+    expect(isCSVorJSONRead('2')).toBe(jsonPath);
   });
 
   it('Returns "end" when user types anything else', () => {
-    expect(isCSVorJSON('3')).toBe('end');
-    expect(isCSVorJSON('abc')).toBe('end');
-    expect(isCSVorJSON('')).toBe('end');
+    expect(isCSVorJSONRead('3')).toBe('end');
+    expect(isCSVorJSONRead('abc')).toBe('end');
+    expect(isCSVorJSONRead('')).toBe('end');
   });
 });
 
@@ -44,5 +45,25 @@ describe('joke.validateAndExecuteJokeSelection', () => {
     expect(validateAndExecuteJokeSelection('4', jokes)).toBeUndefined;
     expect(validateAndExecuteJokeSelection('-1', jokes)).toBeUndefined;
     expect(validateAndExecuteJokeSelection('abc', jokes)).toBeUndefined;
+  });
+});
+
+describe('joke.isCSVorJSONWrite', () => {
+  
+  const csvPath: string = process.env.CSV_PATH;
+  const jsonPath: string = process.env.JSON_PATH;
+
+  it('Returns CSV path when user selects 1', () => {
+    expect(isCSVorJSONWrite('1')).toBe(csvPath);
+  });
+
+  it('Returns JSON path when user selects 2', () => {
+    expect(isCSVorJSONWrite('2')).toBe(jsonPath);
+  });
+
+  it('Returns "end" when user types anything else', () => {
+    expect(isCSVorJSONWrite('3')).toBe('end');
+    expect(isCSVorJSONWrite('abc')).toBe('end');
+    expect(isCSVorJSONWrite('')).toBe('end');
   });
 });

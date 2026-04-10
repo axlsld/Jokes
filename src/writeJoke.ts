@@ -1,20 +1,18 @@
 import * as fs from 'fs';
-import promptSync = require('prompt-sync');
 import * as dotenv from 'dotenv';
 
 dotenv.config();
-const prompt = promptSync();
+function getPrompt() {
+  if (process.env.VITEST) {
+    throw new Error("Prompt used during test import (forbidden)");
+  }
 
-function fileSelection(): string{
-  console.log("---------------------------------------");
-  console.log("This is a program that makes you write");
-  console.log("a joke.");
-  console.log("\nChoose the type of file you want:");
-  console.log("- Type 1 for csv\n- Type 2 for json\n- Type anything else to exit.");
-  console.log("---------------------------------------");
-  const choice: string = prompt('Enter a number: ');
+  const promptSync = require('prompt-sync')();
+  return promptSync;
+}
+
+export function isCSVorJSON(choice: string): string{
   let path: string;
-
   if (choice == '1'){
     if (!process.env.CSV_PATH){
       throw new Error("No CSV_PATH in .env");
@@ -28,9 +26,19 @@ function fileSelection(): string{
   } else {
     console.log('Exiting the program...')
     path='end';
-  } 
-  
-  return path;
+  } return path;
+}
+
+function fileSelection(): string{
+  const prompt = getPrompt();
+  console.log("---------------------------------------");
+  console.log("This is a program that makes you write");
+  console.log("a joke.");
+  console.log("\nChoose the type of file you want:");
+  console.log("- Type 1 for csv\n- Type 2 for json\n- Type anything else to exit.");
+  console.log("---------------------------------------");
+  const choice: string = prompt('Enter a number: ');
+  return isCSVorJSON(choice);
 }
 
 function addJokeCSV(filePath: string, input: string){
@@ -70,36 +78,43 @@ function addJokeJSON(filePath: string, input: string){
   console.log("***************************************");  
 }
 
-while (true) {
-  const pathChosen = fileSelection();
+export function writeJokeProgram(){
+  while (true) {
+    const prompt = getPrompt();
+    const pathChosen = fileSelection();
 
-  if (pathChosen === 'end'){
-    break;
-  }
-
-  if (!fs.existsSync(pathChosen)){
-    console.log("File not found.");
-    continue;
-  }
-  
-  console.log("---------------------------------------");
-  console.log(`            Add A NEW JOKE`);
-  console.log(`         or type "0" to exit`);
-  console.log("---------------------------------------");
-  const input: string = prompt('Enter your joke: ');
-
-  if(input != '0'){
-    try {
-      if (pathChosen === process.env.CSV_PATH){
-        addJokeCSV(pathChosen, input);
-      } else {
-        addJokeJSON(pathChosen, input);
-      }
-    } catch (err: any) {
-      console.error("Error writing file: " + err.message);
+    if (pathChosen === 'end'){
+      break;
     }
-  } else {
-    console.log('Exiting the program...')
-    break;
+
+    if (!fs.existsSync(pathChosen)){
+      console.log("File not found.");
+      continue;
+    }
+    
+    console.log("---------------------------------------");
+    console.log(`            Add A NEW JOKE`);
+    console.log(`         or type "0" to exit`);
+    console.log("---------------------------------------");
+    const input: string = prompt('Enter your joke: ');
+
+    if(input != '0'){
+      try {
+        if (pathChosen === process.env.CSV_PATH){
+          addJokeCSV(pathChosen, input);
+        } else {
+          addJokeJSON(pathChosen, input);
+        }
+      } catch (err: any) {
+        console.error("Error writing file: " + err.message);
+      }
+    } else {
+      console.log('Exiting the program...')
+      break;
+    }
   }
+}
+
+if (require.main === module && process.env.VITEST !== 'true') {
+  jokeProgram();
 }
