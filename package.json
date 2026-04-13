@@ -17,7 +17,8 @@
   "scripts": {
     "build": "tsc ",
     "start": "node joke.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test-ui": "vitest --ui"
   },
   "dependencies": {
     "csv-parse": "^6.2.1",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@types/node": "^25.5.0",
     "@types/prompt-sync": "^4.2.3",
+    "@vitest/ui": "^4.1.4",
     "vitest": "^4.1.4"
   }
 }

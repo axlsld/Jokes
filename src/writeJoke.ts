@@ -45,7 +45,7 @@ function addJokeCSV(filePath: string, input: string){
   const data = fs.readFileSync(filePath, 'utf8');
   const rows = data.split('\n');
   const lastRow = rows[rows.length-1]?.split(',');
-  const lastId = parseInt(lastRow[0]);
+  const lastId = parseInt(lastRow![0]!);
   const newId = lastId + 1;
   const safeInput = input.replace(/"/g, '""'); 
   const newJoke: string = `\n${newId},"${safeInput}"`;
@@ -116,5 +116,5 @@ export function writeJokeProgram(){
 }
 
 if (require.main === module && process.env.VITEST !== 'true') {
-  jokeProgram();
+  writeJokeProgram();
 }

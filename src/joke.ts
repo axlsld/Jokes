@@ -45,17 +45,19 @@ export function fileSelection(): string{
 
 export function validateAndExecuteJokeSelection(input: string, jokes: [number, string][]): boolean {
   const id: number = parseInt(input);
+  let checker: boolean = false;
 
   if(input == '0'){
     return false;
   }
 
   if ((id > 0 && id < jokes.length) && Number.isInteger(Number(input))) {
-    console.log(jokes[id][1]);
-    return true;
+    console.log(jokes[id]![1]);
+    checker = true;
   } else {
     console.log('Invalid input or joke not found');
   }
+return checker;
 }
 
 function jokeSelection(jokes: [number, string][]){
@@ -107,7 +109,7 @@ export function jokeProgram(){
       array = parse(data, {columns: false, skip_empty_lines: true, relax_quotes: true, relax_column_count: true});
     } else {
       const arrayJSON = JSON.parse(data);
-      array = arrayJSON.map((obj, index) => [index+1, obj.joke]);
+      array = arrayJSON.map((obj: any, index: any) => [index+1, obj.joke]);
     }
 
     const continueProgram = jokeSelection(array);

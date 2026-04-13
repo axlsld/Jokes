@@ -7,8 +7,8 @@ dotenv.config();
 
 describe('joke.isCSVorJSONRead', () => {
   
-  const csvPath: string = process.env.CSV_PATH;
-  const jsonPath: string = process.env.JSON_PATH;
+  const csvPath: string = process.env.CSV_PATH!;
+  const jsonPath: string = process.env.JSON_PATH!;
 
   it('Returns CSV path when user selects 1', () => {
     expect(isCSVorJSONRead('1')).toBe(csvPath);
@@ -41,17 +41,17 @@ describe('joke.validateAndExecuteJokeSelection', () => {
     expect(validateAndExecuteJokeSelection('1', jokes)).toBeTruthy;
   });
 
-  it('Returns "Invalid input or joke not found" when user inputs an invalid joke number', () => {
-    expect(validateAndExecuteJokeSelection('4', jokes)).toBeUndefined;
-    expect(validateAndExecuteJokeSelection('-1', jokes)).toBeUndefined;
-    expect(validateAndExecuteJokeSelection('abc', jokes)).toBeUndefined;
+  it('Returns falsy when user inputs an invalid joke number', () => {
+    expect(validateAndExecuteJokeSelection('4', jokes)).toBeFalsy;
+    expect(validateAndExecuteJokeSelection('-1', jokes)).toBeFalsy;
+    expect(validateAndExecuteJokeSelection('abc', jokes)).toBeFalsy;
   });
 });
 
-describe('joke.isCSVorJSONWrite', () => {
+describe('writeJoke.isCSVorJSONWrite', () => {
   
-  const csvPath: string = process.env.CSV_PATH;
-  const jsonPath: string = process.env.JSON_PATH;
+  const csvPath: string = process.env.CSV_PATH!;
+  const jsonPath: string = process.env.JSON_PATH!;
 
   it('Returns CSV path when user selects 1', () => {
     expect(isCSVorJSONWrite('1')).toBe(csvPath);
@@ -65,5 +65,7 @@ describe('joke.isCSVorJSONWrite', () => {
     expect(isCSVorJSONWrite('3')).toBe('end');
     expect(isCSVorJSONWrite('abc')).toBe('end');
     expect(isCSVorJSONWrite('')).toBe('end');
+    expect(isCSVorJSONWrite(' ')).toBe('end');
   });
 });
+
