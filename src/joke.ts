@@ -60,7 +60,7 @@ export function validateAndExecuteJokeSelection(input: string, jokes: [number, s
 return checker;
 }
 
-function jokeSelection(jokes: [number, string][]){
+function jokeSelection(jokes: [number, string][]): boolean{
   const prompt = getPrompt();
   while (true){
     console.log("---------------------------------------");
@@ -73,7 +73,7 @@ function jokeSelection(jokes: [number, string][]){
 
     if (status === false){
       console.log('Exiting the program...');
-      break;
+      return false;
     }
 
     if (status === true){

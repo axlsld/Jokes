@@ -7,6 +7,7 @@ exports.jokeProgram = jokeProgram;
 var fs = require("fs");
 var sync_1 = require("csv-parse/sync");
 var dotenv = require("dotenv");
+require("./env");
 dotenv.config();
 function getPrompt() {
     if (process.env.VITEST) {
@@ -44,21 +45,22 @@ function fileSelection() {
     console.log("- Type 1 for csv\n- Type 2 for json\n- Type anything else to exit.");
     console.log("---------------------------------------");
     var choice = prompt('Enter a number: ');
-    var path = isCSVorJSON(choice);
-    return path;
+    return isCSVorJSON(choice);
 }
 function validateAndExecuteJokeSelection(input, jokes) {
     var id = parseInt(input);
+    var checker = false;
     if (input == '0') {
         return false;
     }
     if ((id > 0 && id < jokes.length) && Number.isInteger(Number(input))) {
         console.log(jokes[id][1]);
-        return true;
+        checker = true;
     }
     else {
         console.log('Invalid input or joke not found');
     }
+    return checker;
 }
 function jokeSelection(jokes) {
     var prompt = getPrompt();
@@ -72,7 +74,7 @@ function jokeSelection(jokes) {
         var status_1 = validateAndExecuteJokeSelection(input, jokes);
         if (status_1 === false) {
             console.log('Exiting the program...');
-            break;
+            return false;
         }
         if (status_1 === true) {
             return true;
