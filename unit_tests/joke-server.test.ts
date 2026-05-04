@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { isCSVorJSON as isCSVorJSONRead, validateAndExecuteJokeSelection } from '../src/joke.ts';
-import { isCSVorJSON as isCSVorJSONWrite } from '../src/writeJoke.ts';
+import { isCSVorJSON as isCSVorJSONRead, validateAndExecuteJokeSelection } from '../src/joke-server.ts';
+import { isCSVorJSON as isCSVorJSONWrite } from '../src/writeJoke.js';
 
 describe('joke.isCSVorJSONRead', () => {
   beforeEach(() => {
