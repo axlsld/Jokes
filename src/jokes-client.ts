@@ -1,15 +1,38 @@
 import * as net from 'net';
+import * as dotenv from 'dotenv';
 
-const client = net.createConnection({ port: 8080, host: '192.168.0.114' }, () => {
+dotenv.config();
+
+const PORT = Number(process.env.PORT);
+const HOST = process.env.IPADDRESS;
+
+const client = net.createConnection( PORT, HOST , () => {
   console.log('Connected to the Joke Server!');
 });
 
 client.on('data', (data: any) => {
-  process.stdout.write(data.toString());
+  const rawData = data.toString();
+
+  try {
+    const json = JSON.parse(rawData);
+
+    if (json.joke){
+      console.log(`\n JOKE: ${json.joke}\n`);
+    } else if (json.message) {
+      process.stdout.write(json.message);
+    } else {
+      console.log(json);
+    }
+  } catch (e) {
+    process.stdout.write(rawData);
+  }
 });
 
 process.stdin.on('data', (data: any) => {
-  client.write(data);
+  const input = data.toString().trim();
+
+  const jsonData = JSON.stringify({ input: input});
+  client.write(jsonData);
 });
 
 client.on('end', () => {
